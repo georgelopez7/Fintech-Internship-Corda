@@ -1,0 +1,161 @@
+import time
+import BetterPrinting as bp
+# Introduction:
+bp.color("\nWelcome To Group 148's Corda Based Exchange\n", "blue")
+time.sleep(2)
+print("-- Our Permissioned Blockchain --\n")
+time.sleep(2)
+print("Here's the list of companies in our network and their respective net worth per hundred million dollars:\n")
+time.sleep(3)
+# Dictionary For The Companies In Our Example:
+companies = dict()
+company_names = ["BNP-Paribas", "BNY-Mellon", "HSBC", "ING", "State-Street"]
+# Company Net Worth is 100 Millions:
+company_values = [20, 19000, 1110, 11000, 314]
+# Runs through The Lists To produce The Dictionary:
+for i in range(len(company_names)):
+    companies[company_names[i]] = company_values[i]
+bp.color(companies, "green")
+time.sleep(5)
+
+# This function takes the transaction string, dissects it and uses the data to process the transaction.
+def Owe2(str):
+    # Splitting the string into a list
+    split_str = str.strip().split()
+    for string in split_str:
+        if "$" not in string:
+            continue
+        else:
+            index = string.find("$")
+            value_amount = int(string[index + 1:])
+    # This is a backup method to ensure the calculations have been carried out correctly. This acts as our notary.
+    backup1 = companies[split_str[0]]
+    backup2 = companies[split_str[3]]
+
+    companies[split_str[0]] -= value_amount
+    companies[split_str[3]] += value_amount
+    print("Transaction is being processed, please wait...\n")
+    time.sleep(4)
+    print("Notary is working to approve your transaction by checking for double spend, please wait...\n")
+    time.sleep(5)
+    print("Checking inputs and outputs of the transaction are valid...\n")
+    time.sleep(3)
+    if companies[split_str[0]] != backup1 - value_amount or companies[split_str[3]] != backup2 + value_amount:
+        bp.color("Consensus breach. Transaction void","red")
+    else:
+        print("Consensus AGREES with this transaction!\n")
+        time.sleep(2)
+        bp.color("TRANSACTION COMPLETE!\n","green")
+        time.sleep(2)
+        print("Check balances\n")
+        time.sleep(4)
+        print("{company2}'s balance is ${value}\n".format(company2=split_str[0], value=companies[split_str[0]]))
+        print("{company1}'s balance is ${value}\n".format(company1=split_str[3], value=companies[split_str[3]]))
+        time.sleep(3)
+        print("The smart contracts in Corda have sent the transaction information and legal prose to both {company2} and {company1}\n".format(company2=split_str[0],company1=split_str[3]))
+        time.sleep(4)
+        bp.color("Thank you for using Group 148's Corda Based Exchange","blue")
+
+# This function simulates a failed transaction
+def Validation_Breach(str):
+    split_str = str.strip().split()
+    for string in split_str:
+        if "$" not in string:
+            continue
+        else:
+            index = string.find("$")
+            value_amount = int(string[index + 1:])
+
+    backup1 = companies[split_str[0]]
+    backup2 = companies[split_str[3]]
+
+    companies[split_str[0]] -= value_amount + 1
+    companies[split_str[3]] += value_amount + 1
+    print("Transaction is being processed, please wait...\n")
+    time.sleep(4)
+    print("Notary is working to approve your transaction by checking for double spend, please wait...\n")
+    time.sleep(5)
+    print("Checking inputs and outputs of the transaction are valid...\n")
+    time.sleep(3)
+    if companies[split_str[0]] != backup1 - value_amount or companies[split_str[3]] != backup2 + value_amount:
+        bp.color("Consensus BREACH. Transaction void!\n", "red")
+        time.sleep(3)
+        print("Notary has identified invalid input or output!\n")
+        time.sleep(3)
+        print("Please check balances before initiating another transaction\n")
+        time.sleep(3)
+        bp.color("Thank you for using Group 148's Corda Based Exchange", "blue")
+    else:
+        print("Consensus AGREES with this transaction!\n")
+        time.sleep(2)
+        bp.color("TRANSACTION COMPLETE!\n", "green")
+        time.sleep(2)
+        print("Check balances\n")
+        time.sleep(4)
+        print("{company2}'s balance is ${value}\n".format(company2=split_str[0], value=companies[split_str[0]]))
+        print("{company1}'s balance is ${value}\n".format(company1=split_str[3], value=companies[split_str[3]]))
+        time.sleep(3)
+        print(
+            "The smart contracts in Corda have sent the transaction information and legal prose to both {company2} and {company1}\n".format(
+                company2=split_str[0], company1=split_str[3]))
+        time.sleep(4)
+        bp.color("Thank you for using Group 148's Corda Based Exchange", "blue")
+
+# Setting the scene of the transaction taking place:
+print("\nToday we will reenact the soybean trade between two arms of Cargill\n"
+      "using letters of credit from HSBC and ING, carried out in May 2018.\n")
+time.sleep(4)
+# A series of if and else statements to ensure the transaction process is smooth:
+valid_input = False
+while not valid_input:
+
+    out1 = input("Are you ready to begin your trade? (Yes / No) \n")
+
+    if out1 == "Yes":
+        # Note to the user the aspects of a permissioned blockchain:
+        bp.color("Note: As a permissioned blockchain only companies involved in the transaction have access to the details of the transaction\n","yellow")
+        time.sleep(3)
+        company_1 = input("State the first company involved in this exchange: \n")
+        company_2 = input("State the second company involved in this exchange: \n")
+
+        out3 = input("Who is the money being sent to? ({company1} / {company2}) \n".format(company1=company_1,
+                                                                                           company2=company_2))
+        out4 = input("State the amount of money being sent per hundred million dollars: \n$")
+
+        print("The pending transaction is...\n")
+        time.sleep(4)
+
+        if out3 == company_1:
+
+            time.sleep(3)
+            # This input can be Yes, No or Break - Break leads to a hypothetical situation where the notary identifies an issue with the transaction
+            ans1 = input("-- {company2} is sending ${value} to {company1} -- (Yes / No) \n".format(company1=company_1,
+                                                                                           company2=company_2, value=int(out4)*100000000))
+            if ans1 == "Yes":
+                valid_input = True
+                str = company_2 + " is sending " + company_1 + " $" + out4
+                Owe2(str)
+            elif ans1 == "Break":
+                valid_input = True
+                str = company_2 + " is sending " + company_1 + " $" + out4
+                Validation_Breach(str)
+            else:
+                print("Restart transaction")
+
+        else:
+            ans1 = input("-- {company1} is sending ${value} to {company2} -- (Yes / No) \n".format(company1=company_1,
+                                                                                                   company2=company_2,
+                                                                                                   value=out4))
+            if ans1 == "Yes":
+                valid_input = True
+                str = company_1 + " is sending " + company_2 + " $" + out4
+                Owe2(str)
+            else:
+                print("Restart transaction")
+    else:
+        out2 = input("Would you like to exit group 148's Corda Exchange? (Yes / No) \n")
+        if out2 == "Yes":
+            print("Thank you for using our service")
+            valid_input = True
+        else:
+            continue
